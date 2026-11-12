@@ -54,3 +54,4 @@ Berikut adalah data kelengkapan pengumpulan tugas proyek pengembangan aplikasi w
 - [x] **5 Data Awal Inventaris Lengkap** (`BR001` Laptop Lenovo, `BR002` Mouse, `BR003` Keyboard, `BR004` Proyektor, `BR005` Monitor).
 - [x] **Desain Modern & Responsif**: Berjalan mulus di perangkat Desktop, Tablet, dan Smartphone.
 - [x] **Koneksi Database Live**: Seluruh perubahan data langsung tersimpan secara *real-time* di Supabase Cloud.
+

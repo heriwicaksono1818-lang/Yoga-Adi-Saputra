@@ -14,6 +14,7 @@ import {
   Plus,
   ArrowRight,
 } from 'lucide-react'
+import DashboardCard from '../../components/DashboardCard';
 
 export default function AdminDashboard() {
   const { isDemoMode } = useAuth()
@@ -107,7 +108,7 @@ export default function AdminDashboard() {
       {/* Header Halaman */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Administrator</h1>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dasbor Administrator</h1>
           <p className="text-sm text-slate-500 mt-1">
             Ringkasan status inventaris, aset laboratorium, dan siklus peminjaman
           </p>
@@ -117,7 +118,7 @@ export default function AdminDashboard() {
           <button
             onClick={loadStats}
             className="p-2.5 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm"
-            title="Refresh Data"
+            title="Segarkan Data"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -134,26 +135,17 @@ export default function AdminDashboard() {
 
       {/* Grid Card Statistik */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((card, idx) => {
-          const Icon = card.icon
-          return (
-            <div
-              key={idx}
-              className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{card.label}</span>
-                <div className={`p-2.5 rounded-xl border ${card.color}`}>
-                  <Icon className="w-4 h-4" />
-                </div>
-              </div>
-              <div className="mt-3">
-                <div className="text-3xl font-extrabold text-slate-800">{card.value}</div>
-                <div className="text-xs text-slate-400 mt-1">{card.sub}</div>
-              </div>
-            </div>
-          )
-        })}
+        {statCards.map((card, idx) => (
+          <DashboardCard
+            key={idx}
+            label={card.label}
+            value={card.value}
+            sub={card.sub}
+            Icon={card.icon}
+            color={card.color}
+          />
+        ))}
+      </div>
       </div>
 
       {/* Tabel Aktivitas Terbaru */}

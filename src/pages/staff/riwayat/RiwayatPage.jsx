@@ -4,13 +4,13 @@ import { useAuth } from '../../../context/AuthContext'
 import { History, RefreshCw, CheckCircle2, Clock } from 'lucide-react'
 
 export default function StaffRiwayatPage() {
-  const { user, isDemoMode } = useAuth()
+  const { user } = useAuth()
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(true)
 
   const loadData = async () => {
     setLoading(true)
-    const res = await peminjamanService.getAll({ userId: user?.id }, isDemoMode)
+    const res = await peminjamanService.getAll({ userId: user?.id })
     if (res.success) {
       setHistory(res.data || [])
     }
@@ -19,7 +19,7 @@ export default function StaffRiwayatPage() {
 
   useEffect(() => {
     if (user?.id) loadData()
-  }, [user?.id, isDemoMode])
+  }, [user?.id])
 
   return (
     <div className="space-y-6">

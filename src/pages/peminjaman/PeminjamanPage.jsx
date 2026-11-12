@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 
 export default function PeminjamanPage({ isAdmin = false }) {
-  const { user, isDemoMode } = useAuth()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const [peminjaman, setPeminjaman] = useState([])
@@ -41,8 +41,8 @@ export default function PeminjamanPage({ isAdmin = false }) {
   const loadData = async () => {
     setLoading(true)
     const [loanRes, itemRes] = await Promise.all([
-      peminjamanService.getAll({ status: filterStatus }, isDemoMode),
-      barangService.getAll({}, isDemoMode),
+      peminjamanService.getAll({ status: filterStatus }),
+      barangService.getAll({}),
     ])
 
     if (loanRes.success) setPeminjaman(loanRes.data || [])
@@ -52,7 +52,7 @@ export default function PeminjamanPage({ isAdmin = false }) {
 
   useEffect(() => {
     loadData()
-  }, [filterStatus, isDemoMode])
+  }, [filterStatus])
 
   // Handle pilihan barang di form
   const handleBarangChange = (barangId) => {
@@ -95,8 +95,7 @@ export default function PeminjamanPage({ isAdmin = false }) {
         jumlah: qty,
         tanggal_peminjaman: formData.tanggal_peminjaman,
         user_id: user?.id,
-      },
-      isDemoMode
+      }
     )
     setSubmitting(false)
 

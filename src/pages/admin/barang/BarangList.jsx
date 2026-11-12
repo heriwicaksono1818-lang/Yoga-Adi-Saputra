@@ -16,7 +16,6 @@ import {
 } from 'lucide-react'
 
 export default function BarangList() {
-  const { isDemoMode } = useAuth()
   const { showToast } = useToast()
 
   const [barang, setBarang] = useState([])
@@ -30,7 +29,7 @@ export default function BarangList() {
 
   const loadData = async () => {
     setLoading(true)
-    const res = await barangService.getAll({ search, kategori }, isDemoMode)
+    const res = await barangService.getAll({ search, kategori })
     if (res.success) {
       setBarang(res.data || [])
     } else {
@@ -41,12 +40,12 @@ export default function BarangList() {
 
   useEffect(() => {
     loadData()
-  }, [search, kategori, isDemoMode])
+  }, [search, kategori])
 
   const handleDelete = async () => {
     if (!deleteTarget) return
     setDeleteLoading(true)
-    const res = await barangService.delete(deleteTarget.id, isDemoMode)
+    const res = await barangService.delete(deleteTarget.id)
     setDeleteLoading(false)
 
     if (res.success) {

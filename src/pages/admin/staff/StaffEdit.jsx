@@ -8,7 +8,6 @@ import { ArrowLeft, Save, Loader2, ShieldCheck } from 'lucide-react'
 export default function StaffEdit() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { isDemoMode } = useAuth()
   const { showToast } = useToast()
 
   const [formData, setFormData] = useState({
@@ -25,7 +24,7 @@ export default function StaffEdit() {
   useEffect(() => {
     const fetchStaff = async () => {
       setLoading(true)
-      const res = await staffService.getAll(isDemoMode)
+      const res = await staffService.getAll()
       if (res.success && res.data) {
         const found = res.data.find((s) => s.id === id)
         if (found) {
@@ -45,7 +44,7 @@ export default function StaffEdit() {
     }
 
     fetchStaff()
-  }, [id, isDemoMode])
+  }, [id])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -62,8 +61,7 @@ export default function StaffEdit() {
       {
         nama: formData.nama,
         status: formData.status,
-      },
-      isDemoMode
+      }
     )
     setSubmitting(false)
 

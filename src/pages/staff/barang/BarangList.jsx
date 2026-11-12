@@ -4,7 +4,6 @@ import { useAuth } from '../../../context/AuthContext'
 import { Boxes, Search, Filter, RefreshCw } from 'lucide-react'
 
 export default function StaffBarangList() {
-  const { isDemoMode } = useAuth()
   const [barang, setBarang] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -12,7 +11,7 @@ export default function StaffBarangList() {
 
   const loadData = async () => {
     setLoading(true)
-    const res = await barangService.getAll({ search, kategori }, isDemoMode)
+    const res = await barangService.getAll({ search, kategori })
     if (res.success) {
       setBarang(res.data || [])
     }
@@ -21,7 +20,7 @@ export default function StaffBarangList() {
 
   useEffect(() => {
     loadData()
-  }, [search, kategori, isDemoMode])
+  }, [search, kategori])
 
   const categories = ['Semua Kategori', 'Laptop', 'Aksesoris', 'Multimedia', 'Periferal', 'Jaringan']
 

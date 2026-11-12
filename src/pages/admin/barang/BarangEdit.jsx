@@ -8,7 +8,6 @@ import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 export default function BarangEdit() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { isDemoMode } = useAuth()
   const { showToast } = useToast()
 
   const [formData, setFormData] = useState({
@@ -27,7 +26,7 @@ export default function BarangEdit() {
   useEffect(() => {
     const fetchItem = async () => {
       setLoading(true)
-      const res = await barangService.getById(id, isDemoMode)
+      const res = await barangService.getById(id)
       if (res.success && res.data) {
         setFormData({
           kode_barang: res.data.kode_barang || '',
@@ -42,7 +41,7 @@ export default function BarangEdit() {
     }
 
     fetchItem()
-  }, [id, isDemoMode])
+  }, [id])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -63,7 +62,7 @@ export default function BarangEdit() {
     }
 
     setSubmitting(true)
-    const res = await barangService.update(id, formData, isDemoMode)
+    const res = await barangService.update(id, formData)
     setSubmitting(false)
 
     if (res.success) {

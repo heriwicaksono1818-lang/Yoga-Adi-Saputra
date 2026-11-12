@@ -23,11 +23,11 @@ export default function AdminLayout() {
             <div className="flex items-center gap-2">
               <Database className="w-4 h-4 text-amber-600 flex-shrink-0" />
               <span>
-                <strong>Perhatian:</strong> Supabase belum terhubung. Aplikasi saat ini berjalan dalam mode <strong>Demo Local Storage</strong>.
+                <strong>Perhatian:</strong> Kredensial Supabase belum terdeteksi.
               </span>
             </div>
             <span className="hidden md:inline text-amber-700 text-[11px]">
-              Set <code>VITE_SUPABASE_URL</code> dan <code>VITE_SUPABASE_ANON_KEY</code> di <code>.env</code> untuk database PostgreSQL.
+              Pastikan <code>VITE_SUPABASE_URL</code> dan <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> telah disetel di Environment Variables Vercel.
             </span>
           </div>
         )}

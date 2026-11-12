@@ -3,12 +3,12 @@ import { peminjamanService } from './peminjamanService'
 import { pengembalianService } from './pengembalianService'
 
 export const dashboardService = {
-  // Ambil metrik ringkasan untuk Admin Dashboard
-  getAdminStats: async (isDemo = false) => {
+  // Ambil metrik ringkasan untuk Admin Dashboard langsung dari Supabase
+  getAdminStats: async () => {
     const [barangRes, pinjamRes, kembaliRes] = await Promise.all([
-      barangService.getAll({}, isDemo),
-      peminjamanService.getAll({}, isDemo),
-      pengembalianService.getAll(isDemo),
+      barangService.getAll({}),
+      peminjamanService.getAll({}),
+      pengembalianService.getAll(),
     ])
 
     const barangList = barangRes.data || []
@@ -27,7 +27,7 @@ export const dashboardService = {
     const transaksiAktif = transaksiAktifList.length
     const transaksiSelesai = pinjamList.filter((p) => p.status === 'selesai').length
 
-    // Aktivitas terbaru: 5 transaksi peminjaman/pengembalian terakhir
+    // Aktivitas terbaru: transaksi peminjaman/pengembalian terakhir
     const aktivitasTerbaru = [...pinjamList]
       .slice(0, 7)
       .map((item) => ({
@@ -51,11 +51,11 @@ export const dashboardService = {
     }
   },
 
-  // Ambil metrik ringkasan untuk Staff Dashboard
-  getStaffStats: async (userId, isDemo = false) => {
+  // Ambil metrik ringkasan untuk Staff Dashboard langsung dari Supabase
+  getStaffStats: async (userId) => {
     const [barangRes, pinjamRes] = await Promise.all([
-      barangService.getAll({}, isDemo),
-      peminjamanService.getAll({}, isDemo),
+      barangService.getAll({}),
+      peminjamanService.getAll({}),
     ])
 
     const barangList = barangRes.data || []
@@ -91,4 +91,3 @@ export const dashboardService = {
     }
   },
 }
-

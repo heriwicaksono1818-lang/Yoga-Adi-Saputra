@@ -17,14 +17,13 @@ import {
 import DashboardCard from '../../components/DashboardCard';
 
 export default function AdminDashboard() {
-  const { isDemoMode } = useAuth()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const loadStats = async () => {
     setLoading(true)
     try {
-      const data = await dashboardService.getAdminStats(isDemoMode)
+      const data = await dashboardService.getAdminStats()
       setStats(data)
     } catch (err) {
       console.error('Error load admin stats:', err)
@@ -35,7 +34,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     loadStats()
-  }, [isDemoMode])
+  }, [])
 
   if (loading) {
     return (
@@ -145,7 +144,6 @@ export default function AdminDashboard() {
             color={card.color}
           />
         ))}
-      </div>
       </div>
 
       {/* Tabel Aktivitas Terbaru */}

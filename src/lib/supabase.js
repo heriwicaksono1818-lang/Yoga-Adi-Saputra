@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim()
+const supabaseAnonKey = (
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_KEY ||
+  ''
+).trim()
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl && 
@@ -10,7 +15,7 @@ export const isSupabaseConfigured = Boolean(
   !supabaseAnonKey.includes('placeholder')
 )
 
-// Gunakan fallback URL aman saat environment variable belum disetel agar app tidak crash seketika
+// Inisialisasi Supabase Client
 const safeUrl = (supabaseUrl.startsWith('http://') || supabaseUrl.startsWith('https://'))
   ? supabaseUrl
   : 'https://placeholder-project.supabase.co'

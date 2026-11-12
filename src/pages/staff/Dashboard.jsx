@@ -15,14 +15,14 @@ import {
 
 import DashboardCard from '../../components/DashboardCard';
 export default function StaffDashboard() {
-  const { user, isDemoMode } = useAuth()
+  const { user } = useAuth()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const loadStats = async () => {
     setLoading(true)
     try {
-      const data = await dashboardService.getStaffStats(user?.id, isDemoMode)
+      const data = await dashboardService.getStaffStats(user?.id)
       setStats(data)
     } catch (err) {
       console.error('Error load staff stats:', err)
@@ -35,7 +35,7 @@ export default function StaffDashboard() {
     if (user?.id) {
       loadStats()
     }
-  }, [user?.id, isDemoMode])
+  }, [user?.id])
 
   if (loading) {
     return (
@@ -130,7 +130,6 @@ export default function StaffDashboard() {
             color={card.color}
           />
         ))}
-      </div>
       </div>
 
       {/* Aktivitas Transaksi Saya */}

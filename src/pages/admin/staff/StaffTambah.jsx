@@ -7,7 +7,6 @@ import { ArrowLeft, Save, ShieldCheck } from 'lucide-react'
 
 export default function StaffTambah() {
   const navigate = useNavigate()
-  const { isDemoMode } = useAuth()
   const { showToast } = useToast()
 
   const [formData, setFormData] = useState({
@@ -38,7 +37,7 @@ export default function StaffTambah() {
     }
 
     setLoading(true)
-    const res = await staffService.create(formData, isDemoMode)
+    const res = await staffService.create(formData)
     setLoading(false)
 
     if (res.success) {

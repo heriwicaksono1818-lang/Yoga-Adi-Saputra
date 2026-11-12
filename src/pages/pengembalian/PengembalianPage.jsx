@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 
 export default function PengembalianPage({ isAdmin = false }) {
-  const { user, isDemoMode } = useAuth()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const [activeLoans, setActiveLoans] = useState([])
@@ -32,8 +32,8 @@ export default function PengembalianPage({ isAdmin = false }) {
   const loadData = async () => {
     setLoading(true)
     const [activeRes, histRes] = await Promise.all([
-      peminjamanService.getAll({ status: 'dipinjam' }, isDemoMode),
-      pengembalianService.getAll(isDemoMode),
+      peminjamanService.getAll({ status: 'dipinjam' }),
+      pengembalianService.getAll(),
     ])
 
     if (activeRes.success) setActiveLoans(activeRes.data || [])
@@ -43,7 +43,7 @@ export default function PengembalianPage({ isAdmin = false }) {
 
   useEffect(() => {
     loadData()
-  }, [isDemoMode])
+  }, [])
 
   const openReturnModal = (loan) => {
     setSelectedLoan(loan)
@@ -79,8 +79,7 @@ export default function PengembalianPage({ isAdmin = false }) {
         jumlah_dikembalikan: qty,
         tanggal_pengembalian: returnDate,
         user_id: user?.id,
-      },
-      isDemoMode
+      }
     )
     setSubmitting(false)
 

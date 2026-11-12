@@ -14,7 +14,7 @@ import {
 import { useAuth } from '../context/AuthContext'
 
 export default function Sidebar({ isOpen, onClose }) {
-  const { profile, isDemoMode } = useAuth()
+  const { profile } = useAuth()
   const isAdmin = profile?.role === 'admin'
 
   const adminNav = [
@@ -102,18 +102,6 @@ export default function Sidebar({ isOpen, onClose }) {
 
         {/* Footer Sidebar */}
         <div className="p-4 border-t border-slate-800">
-          {isDemoMode && (
-            <div className="p-3 mb-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
-              <div className="flex items-center gap-2 text-xs font-semibold text-amber-400">
-                <Sparkles className="w-4 h-4" />
-                <span>Demo Sandbox Mode</span>
-              </div>
-              <p className="text-[11px] text-amber-300/80 mt-1">
-                Data tersimpan di storage browser untuk pengujian cepat tanpa database.
-              </p>
-            </div>
-          )}
-
           <div className="flex items-center gap-3 px-3 py-2 bg-slate-800/40 rounded-xl">
             <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs text-sky-400">
               {profile?.nama?.charAt(0) || 'U'}

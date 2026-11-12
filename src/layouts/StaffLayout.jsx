@@ -23,11 +23,11 @@ export default function StaffLayout() {
             <div className="flex items-center gap-2">
               <Database className="w-4 h-4 text-amber-600 flex-shrink-0" />
               <span>
-                <strong>Mode Demo:</strong> Berjalan pada penyimpanan lokal browser.
+                <strong>Perhatian:</strong> Kredensial Supabase belum terdeteksi.
               </span>
             </div>
             <span className="hidden md:inline text-amber-700 text-[11px]">
-              Koneksikan Supabase untuk sinkronisasi database online.
+              Pastikan <code>VITE_SUPABASE_URL</code> dan <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> telah disetel di Vercel.
             </span>
           </div>
         )}

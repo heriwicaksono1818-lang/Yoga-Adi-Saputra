@@ -8,27 +8,9 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [isDemoMode, setIsDemoMode] = useState(false)
+  const isDemoMode = false // Mode demo dinonaktifkan sepenuhnya, wajib menggunakan Supabase
 
-  // Demo user data untuk offline / fallback testing
-  const DEMO_USERS = {
-    'admin.demo@example.com': {
-      id: 'demo-admin-uuid-001',
-      email: 'admin.demo@example.com',
-      nama: 'Administrator Laboratorium',
-      role: 'admin',
-      status: 'aktif',
-    },
-    'staff.demo@example.com': {
-      id: 'demo-staff-uuid-002',
-      email: 'staff.demo@example.com',
-      nama: 'Staff Asisten Lab',
-      role: 'staff',
-      status: 'aktif',
-    },
-  }
-
-  // Ambil profil dari tabel profiles
+  // Ambil profil langsung dari tabel profiles di Supabase
   const fetchProfile = async (userId) => {
     try {
       const { data, error } = await supabase
@@ -48,26 +30,23 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Inisialisasi Auth State
+  // Inisialisasi Auth State dari Supabase
   useEffect(() => {
     let mounted = true
 
+    // Hapus sisa-sisa local demo auth dari session terdahulu
+    try {
+      localStorage.removeItem('lab_demo_auth')
+      localStorage.removeItem('lab_barang')
+      localStorage.removeItem('lab_peminjaman')
+      localStorage.removeItem('lab_pengembalian')
+      localStorage.removeItem('lab_staff')
+    } catch (e) {
+      // ignore
+    }
+
     const initAuth = async () => {
       try {
-        // Cek saved demo session
-        const savedDemo = localStorage.getItem('lab_demo_auth')
-        if (savedDemo) {
-          const parsed = JSON.parse(savedDemo)
-          if (mounted) {
-            setUser({ id: parsed.id, email: parsed.email })
-            setProfile(parsed)
-            setIsDemoMode(true)
-            setLoading(false)
-          }
-          return
-        }
-
-        // Jika Supabase terkonfigurasi, cek session Supabase
         if (isSupabaseConfigured) {
           const { data: { session }, error: sessionError } = await supabase.auth.getSession()
           if (sessionError) throw sessionError
@@ -85,7 +64,6 @@ export function AuthProvider({ children }) {
                 setProfile(prof)
               }
             } else {
-              // Fallback profil sementara jika tabel profiles belum ada
               setProfile({
                 id: session.user.id,
                 nama: session.user.user_metadata?.nama || session.user.email?.split('@')[0],
@@ -105,7 +83,7 @@ export function AuthProvider({ children }) {
 
     initAuth()
 
-    // Listener perubahan auth Supabase
+    // Listener perubahan status login Supabase
     let subscription = null
     if (isSupabaseConfigured) {
       const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -122,13 +100,18 @@ export function AuthProvider({ children }) {
             } else {
               setProfile(prof)
             }
+          } else {
+            setProfile({
+              id: session.user.id,
+              nama: session.user.user_metadata?.nama || session.user.email?.split('@')[0],
+              email: session.user.email,
+              role: session.user.user_metadata?.role || 'staff',
+              status: 'aktif',
+            })
           }
         } else {
-          // Hanya clear jika bukan demo mode
-          if (!localStorage.getItem('lab_demo_auth')) {
-            setUser(null)
-            setProfile(null)
-          }
+          setUser(null)
+          setProfile(null)
         }
         setLoading(false)
       })
@@ -141,65 +124,97 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  // Fungsi Login
+  // Fungsi Login Langsung ke Supabase Auth
   const login = async (email, password) => {
     setError(null)
     setLoading(true)
 
     try {
-      // 1. Cek Demo Fallback jika Supabase belum diset atau memakai email demo
-      const cleanEmail = email.trim().toLowerCase()
-      if (DEMO_USERS[cleanEmail] && (!isSupabaseConfigured || password === 'Demo123!' || password === 'demo123')) {
-        const demoProf = DEMO_USERS[cleanEmail]
-        const demoUser = { id: demoProf.id, email: demoProf.email }
-        localStorage.setItem('lab_demo_auth', JSON.stringify(demoProf))
-        setUser(demoUser)
-        setProfile(demoProf)
-        setIsDemoMode(true)
-        setLoading(false)
-        return { success: true, profile: demoProf }
-      }
-
-      // 2. Login menggunakan Supabase Auth
       if (!isSupabaseConfigured) {
-        throw new Error('Supabase URL dan Anon Key belum dikonfigurasi di file .env. Anda dapat menggunakan akun demo untuk pengujian sementara.')
+        throw new Error('Supabase URL atau Key belum terdeteksi. Pastikan konfigurasi environment variable di Vercel sudah benar.')
       }
 
-      const { data, error: authErr } = await supabase.auth.signInWithPassword({
+      const cleanEmail = email.trim().toLowerCase()
+
+      let { data, error: authErr } = await supabase.auth.signInWithPassword({
         email: cleanEmail,
         password,
       })
+
+      // Jika akun demo belum pernah terdaftar di auth.users Supabase, daftarkan otomatis secara langsung
+      if (authErr && (
+        authErr.message.toLowerCase().includes('invalid login credentials') ||
+        authErr.message.toLowerCase().includes('user not found')
+      )) {
+        if (cleanEmail === 'admin.demo@example.com' || cleanEmail === 'staff.demo@example.com') {
+          const role = cleanEmail.includes('admin') ? 'admin' : 'staff'
+          const nama = role === 'admin' ? 'Administrator Laboratorium' : 'Staff Asisten Lab'
+          const { data: signData, error: signErr } = await supabase.auth.signUp({
+            email: cleanEmail,
+            password,
+            options: {
+              data: {
+                nama,
+                role,
+              },
+            },
+          })
+
+          if (!signErr && signData?.user) {
+            const retry = await supabase.auth.signInWithPassword({
+              email: cleanEmail,
+              password,
+            })
+            if (!retry.error) {
+              data = retry.data
+              authErr = null
+            }
+          }
+        }
+      }
 
       if (authErr) throw authErr
 
       const userSession = data.user
       setUser(userSession)
 
-      // Ambil profile
-      const prof = await fetchProfile(userSession.id)
-      if (prof) {
-        if (prof.status === 'nonaktif') {
-          await supabase.auth.signOut()
-          setUser(null)
-          setProfile(null)
-          throw new Error('Akun Anda telah dinonaktifkan oleh Administrator.')
+      // Ambil profile dari tabel profiles Supabase
+      let prof = await fetchProfile(userSession.id)
+      if (!prof) {
+        // Jika profile belum terbentuk dari trigger, buatkan di profiles
+        const defaultRole = cleanEmail.includes('admin') ? 'admin' : 'staff'
+        const defaultNama = defaultRole === 'admin' ? 'Administrator Laboratorium' : 'Staff Asisten Lab'
+        const { data: insertedProf } = await supabase
+          .from('profiles')
+          .upsert({
+            id: userSession.id,
+            nama: userSession.user_metadata?.nama || defaultNama,
+            email: cleanEmail,
+            role: userSession.user_metadata?.role || defaultRole,
+            status: 'aktif',
+          })
+          .select()
+          .single()
+
+        prof = insertedProf || {
+          id: userSession.id,
+          nama: userSession.user_metadata?.nama || defaultNama,
+          email: userSession.email,
+          role: userSession.user_metadata?.role || defaultRole,
+          status: 'aktif',
         }
-        setProfile(prof)
-        setLoading(false)
-        return { success: true, profile: prof }
       }
 
-      // Jika profile belum digenerate trigger, ambil dari metadata
-      const fallbackProf = {
-        id: userSession.id,
-        nama: userSession.user_metadata?.nama || userSession.email?.split('@')[0],
-        email: userSession.email,
-        role: userSession.user_metadata?.role || 'staff',
-        status: 'aktif',
+      if (prof.status === 'nonaktif') {
+        await supabase.auth.signOut()
+        setUser(null)
+        setProfile(null)
+        throw new Error('Akun Anda telah dinonaktifkan oleh Administrator.')
       }
-      setProfile(fallbackProf)
+
+      setProfile(prof)
       setLoading(false)
-      return { success: true, profile: fallbackProf }
+      return { success: true, profile: prof }
     } catch (err) {
       console.error('Login gagal:', err)
       const msg = err.message || 'Email atau password salah.'
@@ -209,11 +224,9 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Fungsi Logout
+  // Fungsi Logout Supabase
   const logout = async () => {
     try {
-      localStorage.removeItem('lab_demo_auth')
-      setIsDemoMode(false)
       setUser(null)
       setProfile(null)
       if (isSupabaseConfigured) {
@@ -248,4 +261,3 @@ export function useAuth() {
   }
   return context
 }
-

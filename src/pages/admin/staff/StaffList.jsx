@@ -16,7 +16,6 @@ import {
 } from 'lucide-react'
 
 export default function StaffList() {
-  const { isDemoMode } = useAuth()
   const { showToast } = useToast()
 
   const [staffList, setStaffList] = useState([])
@@ -28,7 +27,7 @@ export default function StaffList() {
 
   const loadData = async () => {
     setLoading(true)
-    const res = await staffService.getAll(isDemoMode)
+    const res = await staffService.getAll()
     if (res.success) {
       setStaffList(res.data || [])
     } else {
@@ -39,12 +38,12 @@ export default function StaffList() {
 
   useEffect(() => {
     loadData()
-  }, [isDemoMode])
+  }, [])
 
   const handleToggleConfirm = async () => {
     if (!toggleTarget) return
     setToggleLoading(true)
-    const res = await staffService.toggleStatus(toggleTarget.id, toggleTarget.status, isDemoMode)
+    const res = await staffService.toggleStatus(toggleTarget.id, toggleTarget.status)
     setToggleLoading(false)
 
     if (res.success) {

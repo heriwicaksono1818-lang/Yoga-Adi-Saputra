@@ -7,7 +7,6 @@ import { ArrowLeft, Save, Boxes } from 'lucide-react'
 
 export default function BarangTambah() {
   const navigate = useNavigate()
-  const { isDemoMode } = useAuth()
   const { showToast } = useToast()
 
   const [formData, setFormData] = useState({
@@ -46,7 +45,7 @@ export default function BarangTambah() {
     }
 
     setLoading(true)
-    const res = await barangService.create(formData, isDemoMode)
+    const res = await barangService.create(formData)
     setLoading(false)
 
     if (res.success) {

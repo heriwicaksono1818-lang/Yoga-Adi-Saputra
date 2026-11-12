@@ -193,8 +193,8 @@ Aplikasi dilengkapi dengan tombol akses cepat 1-Click pada halaman login untuk m
 
 ## 🌐 URL Aplikasi Setelah Deployment
 
-- **Production URL**: `https://your-app-name.vercel.app` *(Dapat disesuaikan setelah deploy)*
-- **Repository GitHub**: `https://github.com/USERNAME/lab-inventory-system`
+- **Production URL**: `https://yoga-adi-saputra.vercel.app` *(Atau URL Vercel setelah dihubungkan)*
+- **Repository GitHub**: `https://github.com/heriwicaksono1818-lang/Yoga-Adi-Saputra`
 
 ---
 
@@ -217,3 +217,4 @@ Aplikasi dilengkapi dengan tombol akses cepat 1-Click pada halaman login untuk m
 - [x] `.env.example` tersedia dan `.env` terisolasi di `.gitignore`
 - [x] Konfigurasi SPA Vercel (`vercel.json`) bebas error 404 saat refresh
 - [x] Akun demo siap uji (`admin.demo@example.com` & `staff.demo@example.com`)
+

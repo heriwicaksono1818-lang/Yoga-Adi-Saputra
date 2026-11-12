@@ -11,7 +11,7 @@
 | **NIM** | **241420023** |
 | **Dosen Pembimbing** | **Ari Muzakir, S.Kom., M.Cs.** |
 | **Repositori GitHub** | [https://github.com/heriwicaksono1818-lang/Yoga-Adi-Saputra](https://github.com/heriwicaksono1818-lang/Yoga-Adi-Saputra) |
-| **Aplikasi Live (Vercel)** | [https://yoga-adi-saputra.vercel.app](https://yoga-adi-saputra.vercel.app) |
+| **Aplikasi Live (Vercel)** | [https://laboratorium-inventory-sistem.vercel.app](https://laboratorium-inventory-sistem.vercel.app) |
 | **Database Cloud** | Supabase PostgreSQL (`zcuybstjppqjanctstkl.supabase.co`) |
 
 ---

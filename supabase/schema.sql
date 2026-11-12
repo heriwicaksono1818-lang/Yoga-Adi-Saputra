@@ -392,3 +392,4 @@ SET nama_barang = EXCLUDED.nama_barang,
 -- Jalankan skrip ini pada Supabase SQL Editor:
 -- Supabase Dashboard -> Project Anda -> SQL Editor -> New Query -> Run
 -- ==============================================================================
+

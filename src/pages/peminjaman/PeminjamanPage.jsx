@@ -347,3 +347,4 @@ export default function PeminjamanPage({ isAdmin = false }) {
     </div>
   )
 }
+

@@ -143,3 +143,4 @@ export const peminjamanService = {
     return { success: true, data: newLoan }
   },
 }
+

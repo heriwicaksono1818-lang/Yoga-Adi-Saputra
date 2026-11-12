@@ -80,3 +80,4 @@ export const getLocalStore = () => {
 export const saveLocalStore = (key, data) => {
   localStorage.setItem(`lab_${key}`, JSON.stringify(data))
 }
+

@@ -1,62 +1,115 @@
 # Laboratory Inventory & Borrowing Management System
+### *Coding Talent Challenge Submission*
 
-Aplikasi web modern dan terintegrasi untuk mengelola inventaris peralatan laboratorium komputer serta pencatatan transaksi peminjaman dan pengembalian barang secara real-time. Dibangun khusus untuk memenuhi seluruh spesifikasi **Coding Talent Challenge**.
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Vercel](https://img.shields.io/badge/Deployment-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+
+Aplikasi web modern dan responsif untuk manajemen inventaris perangkat laboratorium komputer serta pencatatan transaksi peminjaman dan pengembalian barang secara digital dan *real-time*. Proyek ini dirancang secara modular, aman (*Row Level Security*), memiliki operasi atomik pada pergerakan stok barang, dan siap dideploy secara online.
 
 ---
 
-## 🌟 Ringkasan Proyek & Fitur Utama
+## 📌 Informasi Pengumpulan Tugas
 
-Aplikasi ini mengimplementasikan **Role-Based Access Control (RBAC)** yang ketat pada sisi klien (*Protected Routes*) dan sisi basis data menggunakan **Supabase Row Level Security (RLS)** serta operasi atomik (*Stored Procedures / RPC*).
+- **Nama Peserta**: Yoga Adi Saputra
+- **Nama Aplikasi**: Laboratory Inventory & Borrowing Management System
+- **Repositori GitHub**: [https://github.com/heriwicaksono1818-lang/Yoga-Adi-Saputra](https://github.com/heriwicaksono1818-lang/Yoga-Adi-Saputra)
+- **Deployment URL**: [https://yoga-adi-saputra.vercel.app](https://yoga-adi-saputra.vercel.app)
+- **Database**: Supabase PostgreSQL (`zcuybstjppqjanctstkl.supabase.co`)
+
+---
+
+## 🚀 Fitur Utama Berdasarkan Role
+
+Sistem mengimplementasikan **Role-Based Access Control (RBAC)** ketat baik pada sisi navigasi frontend (*Protected Routes*) maupun sisi basis data (*Supabase Row Level Security*).
 
 ### 1. Modul Administrator (`/admin`)
-- **Dashboard Statistik Real-time**: Menampilkan total jenis barang, total stok unit, barang tersedia, barang sedang dipinjam, total transaksi, transaksi aktif, transaksi selesai, dan tabel aktivitas sirkulasi terkini.
-- **Katalog Inventaris & CRUD Barang**:
-  - Penambahan peralatan baru dengan validasi kode barang unik dan stok non-negatif.
-  - Perubahan metadata dan stok fisik barang.
-  - Penghapusan barang yang diamankan dengan *Foreign Key Restriction* (barang dengan riwayat peminjaman aktif dilindungi).
-  - Pencarian cepat dan filter kategori peralatan.
-- **Manajemen Peminjaman & Pengembalian**: Memantau seluruh transaksi, memverifikasi barang kembali, dan memulihkan stok inventaris secara otomatis.
+- **Dashboard Eksekutif**:
+  - Metrik statistik: Total Jenis Barang, Total Stok Fisik, Barang Tersedia, Barang Sedang Dipinjam, Total Transaksi, Transaksi Aktif, dan Transaksi Selesai.
+  - Tabel aktivitas & transaksi terkini secara langsung.
+- **Katalog & Manajemen Barang (Full CRUD)**:
+  - Tambah barang baru (validasi kode barang unik, nama, kategori, stok $\ge 0$).
+  - Ubah metadata barang dan penyesuaian stok.
+  - Hapus barang dengan proteksi relasi (*Foreign Key Restriction*).
+  - Pencarian *live* berdasarkan nama/kode dan filter kategori.
+- **Pusat Sirkulasi Peminjaman & Pengembalian**:
+  - Melihat riwayat transaksi seluruh staf/mahasiswa.
+  - Memverifikasi pengembalian dan pemulihan stok otomatis.
 - **Manajemen Akun Asisten Staff**:
-  - Pendaftaran staf baru (role terkunci otomatis sebagai `staff`).
-  - Pengubahan status aktif / nonaktif staf. Staf nonaktif diblokir secara otomatis dari sistem.
+  - Menambah akun staf baru (role terkunci otomatis sebagai `staff`).
+  - Mengubah data staf dan toggle status keaktifan (`aktif` / `nonaktif`). Staf nonaktif otomatis diblokir saat login.
 
 ### 2. Modul Asisten Staff (`/staff`)
-- **Dashboard Personal**: Ringkasan barang tersedia, barang dipinjam, transaksi yang dicatat staf bersangkutan, dan aktivitas terkini.
-- **Katalog Read-Only**: Pengecekan ketersediaan stok fisik tanpa akses manipulasi atau penghapusan.
-- **Pencatatan Peminjaman**: Validasi stok mencukupi, pengurangan stok atomik, dan pencegahan stok negatif.
-- **Proses Pengembalian**: Verifikasi pengembalian dengan tombol cepat, validasi jumlah kembali $\le$ jumlah pinjaman, dan status transaksi beralih ke `selesai`.
-- **Riwayat Transaksi Pribadi**: Daftar arsip transaksi yang dicatat oleh staf yang sedang login.
+- **Dashboard Staf**:
+  - Metrik ringkas: Total Barang, Barang Tersedia, Unit Dipinjam, dan Transaksi Saya.
+  - Tabel aktivitas peminjaman personal.
+- **Katalog Barang (Read-Only)**:
+  - Cek ketersediaan stok lab tanpa izin mengubah atau menghapus data.
+- **Pencatatan Peminjaman**:
+  - Formulir peminjaman dengan validasi stok mencukupi (stok dilarang negatif).
+  - Pengurangan stok secara atomik (*Stored Procedure / RPC*).
+- **Proses Pengembalian Barang**:
+  - Tombol cepat *"Kembalikan"* pada transaksi aktif.
+  - Validasi jumlah kembali $\le$ jumlah pinjaman.
+  - Status peminjaman otomatis beralih menjadi `selesai`.
+- **Riwayat Transaksi**:
+  - Arsip seluruh catatan transaksi yang diproses oleh staf yang bersangkutan.
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## 📦 Data Awal Inventaris Laboratorium (Wajib)
 
-- **Frontend Framework**: React 18 / 19
-- **Build Tool**: Vite (Modular & Optimized Chunks)
-- **Styling Engine**: Tailwind CSS + Modern Glassmorphism & Micro-animations
-- **Routing**: React Router DOM v6 (Nested Layouts, Strict Protected Routes)
-- **Icon Pack**: Lucide React
-- **Backend & Database**: Supabase (PostgreSQL 15+)
-- **Autentikasi**: Supabase GoTrue Auth (Session Persistence)
-- **Keamanan Data**: Supabase Row Level Security (RLS) & RPC Functions
-- **Version Control**: Git & GitHub
-- **Deployment Platform**: Vercel (disertai konfigurasi SPA rewrite `vercel.json`)
+Data awal telah terintegrasi di skrip SQL migrasi dan penyimpanan lokal:
+
+| Kode Barang | Nama Barang | Kategori | Stok Awal | Status |
+| :---: | :--- | :--- | :---: | :---: |
+| **BR001** | Laptop Lenovo | Laptop | **5** unit | Tersedia |
+| **BR002** | Mouse Logitech | Aksesoris | **10** unit | Tersedia |
+| **BR003** | Keyboard Mechanical | Aksesoris | **8** unit | Tersedia |
+| **BR004** | Proyektor Epson | Multimedia | **3** unit | Tersedia |
+| **BR005** | Monitor LG | Periferal | **6** unit | Tersedia |
 
 ---
 
-## 📁 Struktur Project
+## 🔐 Akun Demo untuk Pengujian Cepat
+
+Pada halaman login (`/login`), tersedia **tombol 1-Click Demo** untuk pengujian langsung tanpa perlu mengetik manual:
+
+| Role Akun | Alamat Email | Kata Sandi Demo | Deskripsi Akses |
+| :--- | :--- | :--- | :--- |
+| **ADMIN** | `admin.demo@example.com` | `Demo123!` | Akses penuh (Dashboard Admin, CRUD barang, manajemen staff, transaksi) |
+| **STAFF** | `staff.demo@example.com` | `Demo123!` | Akses terbatas (Dashboard Staff, katalog read-only, catat pinjam, pengembalian) |
+
+---
+
+## 🛠️ Tech Stack & Arsitektur
+
+- **Frontend**: React 18 / 19, JavaScript (ES Modules), Vite Bundler
+- **Styling**: Tailwind CSS, PostCSS, Autoprefixer
+- **UI Components & Icons**: Lucide React, Glassmorphism, Micro-interactions, Modal konfirmasi kustom, Toast notifications
+- **Routing**: React Router DOM v6 (Strict Role Guard & Nested Layouts)
+- **Database**: Supabase PostgreSQL 15+
+- **Autentikasi**: Supabase GoTrue Auth (Email & Password, Session Persistence)
+- **Keamanan Data**: Supabase Row Level Security (RLS) & Atomic RPC Functions
+- **Deployment**: Vercel dengan konfigurasi SPA Rewrite (`vercel.json`) bebas error 404 saat refresh
+
+---
+
+## 📂 Struktur Direktori Proyek
 
 ```text
 CodingChallenge/
-├── public/                     # Aset statis & favicon
+├── public/                     # Aset statis dan ikon favicon
 ├── src/
-│   ├── components/             # Reusable UI components
-│   │   ├── ConfirmModal.jsx    # Modal dialog konfirmasi modern
-│   │   ├── Navbar.jsx          # Topbar responsif & info profil pengguna
+│   ├── components/             # Komponen UI reusable
+│   │   ├── ConfirmModal.jsx    # Modal dialog konfirmasi tindakan destruktif
+│   │   ├── Navbar.jsx          # Topbar navigasi & info profil pengguna
 │   │   ├── ProtectedRoute.jsx  # Route guard berbasis autentikasi & role
 │   │   └── Sidebar.jsx         # Navigasi samping dinamis sesuai role
 │   ├── context/
-│   │   ├── AuthContext.jsx     # State manajemen autentikasi & profil Supabase
+│   │   ├── AuthContext.jsx     # State manajemen autentikasi & profil pengguna
 │   │   └── ToastContext.jsx    # Sistem notifikasi toast non-intrusif
 │   ├── layouts/
 │   │   ├── AdminLayout.jsx     # Shell tata letak khusus Administrator
@@ -64,27 +117,29 @@ CodingChallenge/
 │   ├── lib/
 │   │   └── supabase.js         # Inisialisasi Supabase Client SDK
 │   ├── pages/
-│   │   ├── admin/              # Halaman Administrator
-│   │   │   ├── barang/         # List, Tambah, dan Edit Barang
-│   │   │   ├── staff/          # List, Tambah, dan Edit Status Staff
-│   │   │   └── Dashboard.jsx   # Dashboard analitik Admin
+│   │   ├── admin/
+│   │   │   ├── barang/         # List, Tambah, dan Edit Barang (Admin)
+│   │   │   ├── staff/          # List, Tambah, dan Edit Status Staff (Admin)
+│   │   │   └── Dashboard.jsx   # Dashboard analitik Administrator
 │   │   ├── auth/
 │   │   │   └── Login.jsx       # Halaman login resmi & tombol 1-Click Demo
-│   │   ├── peminjaman/         # Modul transaksi peminjaman barang
-│   │   ├── pengembalian/       # Modul pengembalian & pemulihan stok
-│   │   └── staff/              # Halaman Asisten Staff
-│   │       ├── barang/         # Katalog barang read-only
-│   │       ├── riwayat/        # Riwayat transaksi personal
-│   │       └── Dashboard.jsx   # Dashboard staf
+│   │   ├── peminjaman/
+│   │   │   └── PeminjamanPage.jsx # Modul transaksi peminjaman alat
+│   │   ├── pengembalian/
+│   │   │   └── PengembalianPage.jsx # Modul pengembalian & pemulihan stok
+│   │   └── staff/
+│   │       ├── barang/         # Katalog barang read-only (Staff)
+│   │       ├── riwayat/        # Riwayat transaksi personal staf
+│   │       └── Dashboard.jsx   # Dashboard Asisten Staff
 │   ├── services/               # Abstraksi API & Business Logic Layer
-│   │   ├── barangService.js
-│   │   ├── dashboardService.js
-│   │   ├── dataStore.js        # Seed data & fallback store
-│   │   ├── peminjamanService.js
-│   │   ├── pengembalianService.js
-│   │   └── staffService.js
+│   │   ├── barangService.js    # Layanan CRUD data barang
+│   │   ├── dashboardService.js # Agregasi metrik analitik dashboard
+│   │   ├── dataStore.js        # Penyimpanan data awal & fallback sandbox
+│   │   ├── peminjamanService.js# Transaksi peminjaman dan pengurangan stok
+│   │   ├── pengembalianService.js # Transaksi pengembalian dan penambahan stok
+│   │   └── staffService.js     # Manajemen akun dan status staf
 │   ├── App.jsx                 # Routing sentral aplikasi
-│   ├── index.css               # Directives Tailwind CSS & custom styling
+│   ├── index.css               # Directives Tailwind CSS & styling kustom
 │   └── main.jsx                # React DOM entry point
 ├── supabase/
 │   └── schema.sql              # Skrip migrasi DDL, RLS, Trigger, RPC, & Data Awal
@@ -100,121 +155,89 @@ CodingChallenge/
 
 ---
 
-## ⚡ Panduan Menjalankan Project Secara Lokal
+## ⚡ Panduan Menjalankan di Komputer Lokal
 
-### 1. Prasyarat
-- Node.js versi 18+ atau 22+
-- NPM atau PNPM
+### 1. Clone Repositori
+```bash
+git clone https://github.com/heriwicaksono1818-lang/Yoga-Adi-Saputra.git
+cd Yoga-Adi-Saputra
+```
 
-### 2. Instalasi Dependensi
+### 2. Instal Dependensi
 ```bash
 npm install
 ```
 
-### 3. Konfigurasi Variabel Lingkungan
+### 3. Konfigurasi File Environment
 Salin file `.env.example` menjadi `.env`:
 ```bash
 cp .env.example .env
 ```
-Isi kredensial Supabase Anda:
+Isi variabel dengan kredensial Supabase Anda:
 ```env
-VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
+VITE_SUPABASE_URL=https://zcuybstjppqjanctstkl.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_u0R9yEBX3JtmDw0tnBSUOw_JKfzYODa
 ```
-*(Catatan: Aplikasi tetap dapat diuji secara lokal menggunakan mode Sandbox / Demo Data bawaan apabila Supabase belum dikonfigurasikan).*
 
-### 4. Menjalankan Server Development
+### 4. Jalankan Server Development
 ```bash
 npm run dev
 ```
-Buka browser pada alamat: `http://localhost:3000`
+Buka peramban pada alamat: **`http://localhost:3000`**
 
-### 5. Melakukan Build untuk Produksi
+### 5. Build untuk Produksi
 ```bash
 npm run build
 ```
 
 ---
 
-## 🗄️ Konfigurasi Database Supabase
+## 🗄️ Panduan Inisialisasi Database Supabase
 
-1. Buat project baru pada [Supabase Dashboard](https://supabase.com).
-2. Buka menu **SQL Editor** pada project Supabase Anda.
-3. Buka file [`supabase/schema.sql`](file:///c:/Users/L/Desktop/CodingChallenge/supabase/schema.sql) dari repositori ini, salin seluruh isinya, tempel ke dalam SQL Editor, lalu tekan **Run**.
-4. Skrip tersebut secara otomatis akan:
-   - Membuat tabel `profiles`, `barang`, `peminjaman`, dan `pengembalian`.
-   - Menyiapkan relasi *foreign key*, constraint stok non-negatif, dan trigger `updated_at`.
-   - Mengaktifkan **Row Level Security (RLS)** dengan policy yang mengunci izin Staff dan memberi kuasa penuh kepada Admin.
-   - Membuat *Stored Procedure* (`proses_peminjaman` dan `proses_pengembalian`) untuk menjamin transaksi stok bebas dari *race condition*.
-   - Memasukkan data awal inventaris wajib:
-     - `BR001` - Laptop Lenovo (Stok: 5)
-     - `BR002` - Mouse Logitech (Stok: 10)
-     - `BR003` - Keyboard Mechanical (Stok: 8)
-     - `BR004` - Proyektor Epson (Stok: 3)
-     - `BR005` - Monitor LG (Stok: 6)
-
----
-
-## 🔐 Akun Demo untuk Pengujian
-
-Aplikasi dilengkapi dengan tombol akses cepat 1-Click pada halaman login untuk memudahkan penguji:
-
-| Role | Alamat Email | Password Demo | Hak Akses |
-| :--- | :--- | :--- | :--- |
-| **ADMIN** | `admin.demo@example.com` | `Demo123!` | Akses penuh dashboard, kelola barang, kelola staff, transaksi |
-| **STAFF** | `staff.demo@example.com` | `Demo123!` | Dashboard staf, cek stok barang, catat pinjam & kembali |
-
-> [!NOTE]
-> Untuk menambahkan akun pada Supabase Auth di lingkungan *live*:
-> Buat user di Supabase Dashboard -> **Authentication** -> **Users** -> **Add User**, lalu masukkan profil di tabel `profiles` dengan role yang sesuai (`admin` atau `staff`).
+1. Buka [Supabase Dashboard](https://supabase.com).
+2. Masuk ke proyek Anda, lalu pilih menu **SQL Editor**.
+3. Buka file [`supabase/schema.sql`](supabase/schema.sql), salin seluruh isinya, tempel ke dalam SQL Editor Supabase, lalu tekan tombol **Run**.
+4. Skrip secara otomatis akan menyiapkan:
+   - Tabel `profiles`, `barang`, `peminjaman`, dan `pengembalian`.
+   - *Foreign Key* dan *Constraint* (`stok >= 0`, `jumlah > 0`).
+   - Trigger otomatis `handle_new_user` untuk sinkronisasi `auth.users` ke `public.profiles`.
+   - *Stored Procedures (RPC)* `proses_peminjaman` dan `proses_pengembalian` (transaksi aman dari *race condition*).
+   - Seluruh kebijakan **Row Level Security (RLS)** untuk Admin dan Staff.
+   - 5 Data awal inventaris wajib (`BR001` - `BR005`).
 
 ---
 
 ## 🚀 Panduan Deployment ke Vercel
 
-1. Buat repository baru di **GitHub** (misalnya `lab-inventory-system`).
-2. Hubungkan folder project lokal dan lakukan push ke GitHub:
-   ```bash
-   git add .
-   git commit -m "feat: complete laboratory inventory and borrowing management system"
-   git branch -M main
-   git remote add origin https://github.com/USERNAME/REPO_NAME.git
-   git push -u origin main
-   ```
-3. Buka dashboard [Vercel](https://vercel.com) dan pilih **Add New Project**.
-4. Import repository GitHub yang baru saja dibuat.
-5. Pada bagian **Environment Variables**, tambahkan:
-   - `VITE_SUPABASE_URL` = `https://your-project-id.supabase.co`
-   - `VITE_SUPABASE_ANON_KEY` = `your-supabase-anon-key`
-6. Klik tombol **Deploy**.
-7. File [`vercel.json`](file:///c:/Users/L/Desktop/CodingChallenge/vercel.json) yang telah disediakan akan menangani SPA rewrite otomatis agar halaman tidak mengalami error 404 saat pengguna melakukan refresh rute.
+1. Buka [Vercel Dashboard](https://vercel.com) dan hubungkan akun GitHub Anda.
+2. Klik **Add New Project** $\rightarrow$ **Import** repository `heriwicaksono1818-lang/Yoga-Adi-Saputra`.
+3. Pada menu konfigurasi **Environment Variables**, tambahkan:
+   - `VITE_SUPABASE_URL` : `https://zcuybstjppqjanctstkl.supabase.co`
+   - `VITE_SUPABASE_ANON_KEY` : `sb_publishable_u0R9yEBX3JtmDw0tnBSUOw_JKfzYODa`
+4. Klik tombol **Deploy**.
+5. File [`vercel.json`](vercel.json) di repositori akan otomatis menangani penulisan ulang rute (*SPA rewrites*) sehingga rute `/admin`, `/staff`, atau `/login` dapat di-refresh langsung tanpa kendala error 404.
 
 ---
 
-## 🌐 URL Aplikasi Setelah Deployment
+## ✅ Checklist Pemenuhan Kriteria Tugas (Coding Talent Challenge)
 
-- **Production URL**: `https://yoga-adi-saputra.vercel.app` *(Atau URL Vercel setelah dihubungkan)*
-- **Repository GitHub**: `https://github.com/heriwicaksono1818-lang/Yoga-Adi-Saputra`
-
----
-
-## ✅ Checklist Pengumpulan (Coding Talent Challenge)
-
-- [x] Tech Stack: React + Vite + Tailwind CSS + Supabase
-- [x] Dual-Role terverifikasi: **Admin** & **Staff**
-- [x] Role-Based Access Control (Protected routes & database RLS)
-- [x] Autentikasi Supabase Auth & Session persistence
-- [x] Skema database: `profiles`, `barang`, `peminjaman`, `pengembalian`
-- [x] Aturan stok atomik: peminjaman mengurangi stok, pengembalian memulihkan stok
-- [x] Validasi stok non-negatif & pencegahan peminjaman melebihi stok
-- [x] Seed data awal lengkap (`BR001` - `BR005`)
-- [x] Admin Dashboard (7+ kartu metrik analitik & tabel aktivitas)
-- [x] Staff Dashboard (metrik personal & riwayat transaksi staf)
-- [x] CRUD barang lengkap dengan validasi kode unik
-- [x] Modul Peminjaman & Pengembalian dengan notifikasi toast dan status `selesai`
-- [x] Manajemen staf (tambah staf, kunci role staff, aktif/nonaktifkan)
-- [x] Responsive layout (Desktop, Tablet, Mobile)
-- [x] `.env.example` tersedia dan `.env` terisolasi di `.gitignore`
-- [x] Konfigurasi SPA Vercel (`vercel.json`) bebas error 404 saat refresh
-- [x] Akun demo siap uji (`admin.demo@example.com` & `staff.demo@example.com`)
-
+- [x] **Tech Stack Sesuai**: React + Vite + Tailwind CSS + Supabase PostgreSQL + Git + Vercel
+- [x] **Dua Role Utama Terimplementasi**: **ADMIN** & **STAFF**
+- [x] **Role-Based Access Control**: Protected routes pada frontend dan RLS pada database Supabase
+- [x] **Supabase Authentication**: Login email & password, session persistence, logout
+- [x] **Pencegahan Akses Ilegal**: Staff tidak dapat mengakses rute admin, mengubah role, atau menghapus barang
+- [x] **Skema Basis Data Lengkap**: Tabel `profiles`, `barang`, `peminjaman`, `pengembalian`
+- [x] **Integritas Aturan Stok**:
+  - Peminjaman otomatis mengurangi stok barang
+  - Pengembalian otomatis menambah stok barang
+  - Status peminjaman beralih menjadi `selesai`
+  - Validasi stok non-negatif dan penolakan transaksi jika jumlah $\gt$ stok tersedia
+- [x] **5 Data Awal Inventaris Lengkap**: `BR001` s/d `BR005`
+- [x] **Dashboard Administrator**: 7 kartu metrik analitik lengkap & tabel aktivitas terkini
+- [x] **Dashboard Asisten Staff**: Metrik barang, transaksi personal, dan aktivitas staf
+- [x] **Manajemen Barang (CRUD)**: Tambah, edit, hapus (dengan konfirmasi modal), dan pencarian/filter
+- [x] **Manajemen Akun Staff**: Tambah akun staff, kunci role otomatis `staff`, toggle status aktif/nonaktif
+- [x] **UI/UX Modern**: Desain bersih, Sidebar, Topbar, Card statistik, Modal dialog, Toast responsif
+- [x] **Keamanan Kredensial**: `.env` terabaikan di Git, hanya publishable/anon key yang digunakan di frontend
+- [x] **Akun Demo Cepat**: Tombol 1-Click Demo untuk Admin dan Staff di halaman login
+- [x] **Dokumentasi Lengkap**: File `README.md` terstruktur rapi untuk kemudahan evaluasi penguji
